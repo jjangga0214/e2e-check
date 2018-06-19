@@ -1,0 +1,14 @@
+{
+    "name": "e2e-check-cypress",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "test": "cypress run",
+        "test:debug": "cypress open"
+    },
+    "devDependencies": {
+        "@cypress/webpack-preprocessor": "^2.0.1",
+        "cypress": "^3.0.1",
+        "ts-loader": "^4.4.1"
+    }
+}
