@@ -22,3 +22,7 @@ Differences:
 Nice to haves:
 
 - Screenrecording/screenshots
+
+Bugs:
+
+- Cypress: Can't run in non-headless mode.

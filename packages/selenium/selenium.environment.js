@@ -1,6 +1,6 @@
 const { start } = require('selenium-standalone');
 const NodeEnvironment = require('jest-environment-node');
-const { Builder, By, until } = require('selenium-webdriver');
+const { Builder } = require('selenium-webdriver');
 const { Options } = require('selenium-webdriver/chrome');
 const { executablePath } = require('puppeteer');
 
