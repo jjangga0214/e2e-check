@@ -15,8 +15,11 @@ describe('Google', () => {
   it('search', async () => {
     await page.type('input[name="q"]', 'e2e-check');
     await page.click('input[name="btnK"]');
+    // this will be executed in browser context
     await page.waitForFunction(
       'document.title === "e2e-check - Google Search"'
     );
+    // for the node context you'd need a helper like this:
+    // `await require('async-wait-until')(async () => await page.title() === 'e2e-check - Google Search)`
   });
 });

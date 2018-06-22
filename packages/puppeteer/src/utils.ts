@@ -1,4 +1,4 @@
-export function $eval<T extends HTMLElement, A = any, R = any>(
+export function $eval<T extends Element = HTMLElement, A = any, R = any>(
   selector: string,
   pageFunction: (element: T, ...args: A[]) => R,
   ...args: A[]
