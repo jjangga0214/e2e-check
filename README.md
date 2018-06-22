@@ -9,7 +9,7 @@ For several years we used Selenium for E2E-testing our web applications. We star
 We hade a _lot_ of problems with this approach:
 - The selenium grid itself was very flaky.
 - Updating and maintaining the grid was cumbersome.
-- Developers updatet their browsers on developer machines more often, so we used different browser versions on CI vs. locally.
+- Developers updated their browsers on developer machines more often, so we used different browser versions on CI vs. locally.
 - Debugging was quite hard the way selenium handled their asynchronous APIs (e.g. bad stack traces). (This now becomes better by native `async`/`await` support.) 
 - Sometimes the same API which worked in 9 cases didn't work on the 10th case. (E.g. clicking a button wasn't possible in test case 10 without a logical reason like being invisible or covered by a different element. It just didn't work.)
 - Sometimes the same API worked in _nth_ browsers in _nth_ versions, but not in Firefox 33 for example for now no clear reason.
@@ -18,11 +18,11 @@ We hade a _lot_ of problems with this approach:
 
 All in all having nice and stable automatic cross browser testing was just a dream.
 
-Some months ago we switched to only test with Selenium on [`Puppeteer`](https://github.com/GoogleChrome/puppeteer). We lost (flaky) cross browser testing, but reduces maintenance time by a magniute and our tests becomes _much_ more stable - so the E2E tests became actually useful again. (Cross browser testing is nice, but it solves no problem, if it isn't reliable.) The time we saved in maintenance could be invested in manual cross browser tests when needed. (Cross browser compability of our web technology is not perfect - there are so many browser quirks -, but it became definitely better in the last years, so you don't have as many browser specific bugs as we had ten years ago in my experience. At least if you mostly use battle tested frameworks, established patterns and no experimental APIs.)
+Some months ago we switched to only test with Selenium on [`Puppeteer`](https://github.com/GoogleChrome/puppeteer). We lost (flaky) cross browser testing, but reduces maintenance time by a magnitude and our tests become _much_ more stable - so the E2E tests became actually useful again. (Cross browser testing is nice, but it solves no problem, if it isn't reliable.) The time we saved in maintenance could be invested in manual cross browser tests when needed. (Cross browser compatibility of our web technology is not perfect - there are so many browser quirks -, but it became definitely better in the last years, so you don't have as many browser specific bugs as we had ten years ago in my experience. At least if you mostly use battle tested frameworks, established patterns and no experimental APIs.)
 
 We gained other benefits by this approach as well. Puppeteer automatically installs a local copy of Chrome in a specific browser version, so developers and CI finally use the exact same environment for tests. Puppeteer can also run headless which helps in a lot of CI systems.
 
-Nevertheless we still had problems like the one mentioned above: You click 9 buttons and everything works fine, but the 10th button can't be clicked for unknown reasons. And sometimes you have to update Puppeteer and occasionally a test broke, because of this. I can't say for sure that Selenium caused these problems, but my guess is if we would write our tests directly in Puppeteer it would be more likely to eliminate this point of failure as well. 
+Nevertheless we still had problems like the one mentioned above: You click 9 buttons and everything works fine, but the 10th button can't be clicked for unknown reasons. And sometimes you have to update Puppeteer and occasionally break a test because of this. I can't say for sure that Selenium caused these problems, but my guess is if we would write our tests directly in Puppeteer it would be more likely to eliminate this point of failure as well. 
 
 Why did we still had Selenium tests at all and haven't used Puppeteer directly? Well, every test was already written and using _both_ helped us to migrate and play around with Puppeteer. And if we'd ever _need_ to test something in a different browser, it would be quite easy...
 
@@ -48,14 +48,14 @@ We try to
 
 ## Differences
 
-- Cypress runs inside browser, while every other framework runs a Node process
+- Cypress runs inside the browser, while every other framework runs a Node process
   - If you need non-browser information (check mails, logs, etc.) in Cypress, you essentially need to start a local Node server which can than be queried for certain informations by your Cypress tests. (E.g. your test can request `localhost:8080/did-i-got-my-email` and the local server will serve you a useful response.)
 - Cypress uses a bundled Eletron version to support testing the same browser in the same version on CI and locally. AFAIK it isn't the only framework where I can't use Puppeteer directly. (Just nice to know - not a real drawback.)
-- Cypress seems to allways offer synchronous APIs, I guess because it runs directly in the browser...?
+- Cypress seems to always offer synchronous APIs, I guess because it runs directly in the browser...?
 - Cypress and testcase come with their own test runners - no Jest love here 😞
-- Cypress create awesome videos with a nice GUI showing informations about your tests out of the box 😍
+- Cypress creates awesome videos with a nice GUI showing information about your tests out of the box 😍
 - `@types/puppeteer` could need some love, but nothing a pull request couldn't fix 👌 
-- Puppeteers wait until functionality is very basic. `waitForFunction` is evaluated in browser context. If you need to await something on the Node side you'll need a helper lib like [`async-wait-until`](https://github.com/devlato/waitUntil).
+- Puppeteers waits until functionality is very basic. `waitForFunction` is evaluated in browser context. If you need to await something on the Node side you'll need a helper lib like [`async-wait-until`](https://github.com/devlato/waitUntil).
 - Testcafe seems to automatically await certain assertions and conditions. 
 
 ## TODOs
