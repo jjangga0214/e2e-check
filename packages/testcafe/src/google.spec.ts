@@ -13,7 +13,7 @@ test('check', async (t) => {
 test('search', async (t) => {
   await t
     .typeText(Selector('input[name="q"]'), 'e2e-check')
-    .click(Selector('body')) // closes overlay
+    .pressKey('esc')
     .click(Selector('input[name="btnK"]'))
     .expect(Selector('title').innerText)
     .eql('e2e-check - Google Search');

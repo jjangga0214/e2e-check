@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "test": "cypress run",
+        "test": "cypress run --config video=false",
         "test:debug": "cypress open"
     },
     "devDependencies": {

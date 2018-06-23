@@ -14,6 +14,7 @@ describe('Google', () => {
 
   it('search', async () => {
     await page.type('input[name="q"]', 'e2e-check');
+    await page.keyboard.press('Escape'); // closes overlay
     await page.click('input[name="btnK"]');
     // this will be executed in browser context
     await page.waitForFunction(

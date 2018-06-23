@@ -56,10 +56,23 @@ We try to
 - Cypress creates awesome videos with a nice GUI showing information about your tests out of the box 😍
 - `@types/puppeteer` could need some love, but nothing a pull request couldn't fix 👌 
 - Puppeteers waits until functionality is very basic. `waitForFunction` is evaluated in browser context. If you need to await something on the Node side you'll need a helper lib like [`async-wait-until`](https://github.com/devlato/waitUntil).
-- Testcafe seems to automatically await certain assertions and conditions. 
+- Testcafe seems to automatically await certain assertions and conditions.
+- In some tests I needed to close the overlay of Googles search to click the search button. It looks like this overlay doesn't appear in Cypress tests and I'd guess this is _wrong_. ⚠️ 
+
+## Performance
+
+Just a small check. Two runs with Node v8.11.2 in headless mode. I run `$ yarn test` and look at the yarn output `✨  Done in 00.00s.`.
+
+As far as I understand Cypress and Testcafe run tests sequentially by design. I _think_ Puppeteer could run the tests in parallel with Jest, but my experiments with `browser.newPage` failed, so it runs sequentially now as well. Selenium seems to run the tests in parallel.
+
+- Cypress: 21.53s, 21.72s
+- Puppeteer: 4.88s, 4.72s ❤️
+- Selenium: 4.38s, 4.29s ❤️
+- Testcafe: 11.29s, 11.47s
 
 ## TODOs
 
 - finish "showcase a debugging example"
 - use Jest Puppeteer preset correctly, so we don't need to set global setup and teardown
 - try [`puppeteer-recorder`](https://www.npmjs.com/package/puppeteer-recorder) for recording the test screens
+- try to click on something invisble
