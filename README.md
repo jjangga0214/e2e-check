@@ -85,13 +85,15 @@ I actually need to scroll up a while to find my failing test. The stack trace sa
 
 Now to **Selenium**. Jest collects errors at the bottom, so no scrolling is needed. It also shows a preview of your code, a small stack trace and the received content which is _awesome_. The source maps just work. ❤️
 
-![a failed test in Selenium](./assets/cypress-failed-test-selenium.png)
+![a failed test in Selenium](./assets/selenium-failed-test-stack-trace.png)
 
 The same is true for **Puppeteer**, because I use Jest here as well.
 
-![a failed test in Puppeteer](./assets/cypress-failed-test-puppeteer.png)
+![a failed test in Puppeteer](./assets/puppeteer-failed-test-stack-trace.png)
 
 **Testcafe** doesn't place the errors at the bottom of the output., In this case the output was quite small, so I didn't need to scroll, but it could grow in other cases. Besides that the output was nice: a code preview and stack trace with correct source map support and the received value was logged.
+
+![a failed test in Puppeteer](./assets/testcafe-failed-test-stack-trace.png)
 
 ## TODOs
 
