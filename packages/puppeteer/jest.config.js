@@ -6,6 +6,6 @@ module.exports = {
   testMatch: ['**/*.spec.(ts|tsx|js|jsx)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   testEnvironment: 'jest-environment-puppeteer',
-  globalSetup: './global-setup.js',
-  globalTeardown: './global-teardown.js'
+  globalSetup: 'jest-environment-puppeteer/setup',
+  globalTeardown: 'jest-environment-puppeteer/teardown'
 };

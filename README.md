@@ -57,7 +57,8 @@ We try to
 - `@types/puppeteer` could need some love, but nothing a pull request couldn't fix 👌 
 - Puppeteers waits until functionality is very basic. `waitForFunction` is evaluated in browser context. If you need to await something on the Node side you'll need a helper lib like [`async-wait-until`](https://github.com/devlato/waitUntil).
 - Testcafe seems to automatically await certain assertions and conditions.
-- In some tests I needed to close the overlay of Googles search to click the search button. It looks like this overlay doesn't appear in Cypress tests and I'd guess this is _wrong_. ⚠️ 
+- In some tests I needed to close the overlay of Googles search to click the search button. It looks like this overlay doesn't appear in Cypress tests and I'd guess this is _wrong_. ⚠️
+- Not sure why, but out of nowhere my Selenium tests started to fail, because of _"Another Selenium process may already be running or your java version may be out of date."_ ️️️️⚠️
 
 ## Performance
 
@@ -70,9 +71,29 @@ As far as I understand Cypress and Testcafe run tests sequentially by design. I 
 - Selenium: 4.38s, 4.29s ❤️
 - Testcafe: 11.29s, 11.47s
 
+## Errors
+
+For my debugging test I changed the `github.spec.ts` in every framework to check if the signup button contains `Sign up for GitHab` (misspelled GitHub). I tried to enable Source Maps in every case.
+
+Let's start with **Cypress**. It fails with the following overview stating `github.spec.ts` failed, but not which test exactly (if we would have multiple tests here).
+
+![overview of failed test in Cypress](./assets/cypress-failed-test-overview.png)
+
+I actually need to scroll up a while to find my failing test. The stack trace sadly doesn't point to my actual test. Everything is hidden by some Cypress internal logic. I'm not even sure my source maps would work. There error message is okay, but not perfect. It shows me a different selector than I used and it doesn't show me the received content. 😔
+
+![a failed test in Cypress](./assets/cypress-failed-test-stack-trace.png)
+
+Now to **Selenium**. Jest collects errors at the bottom, so no scrolling is needed. It also shows a preview of your code, a small stack trace and the received content which is _awesome_. The source maps just work. ❤️
+
+![a failed test in Selenium](./assets/cypress-failed-test-selenium.png)
+
+The same is true for **Puppeteer**, because I use Jest here as well.
+
+![a failed test in Puppeteer](./assets/cypress-failed-test-puppeteer.png)
+
+**Testcafe** doesn't place the errors at the bottom of the output., In this case the output was quite small, so I didn't need to scroll, but it could grow in other cases. Besides that the output was nice: a code preview and stack trace with correct source map support and the received value was logged.
+
 ## TODOs
 
 - finish "showcase a debugging example"
-- use Jest Puppeteer preset correctly, so we don't need to set global setup and teardown
 - try [`puppeteer-recorder`](https://www.npmjs.com/package/puppeteer-recorder) for recording the test screens
-- try to click on something invisble

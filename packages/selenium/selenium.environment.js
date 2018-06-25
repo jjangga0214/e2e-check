@@ -41,7 +41,9 @@ class SeleniumEnvironment extends NodeEnvironment {
   }
 
   async teardown() {
-    await this.driver.quit();
+    if (this.driver) {
+      await this.driver.quit();
+    }
     await super.teardown();
   }
 }
