@@ -54,6 +54,7 @@ We try to
 - Cypress seems to always offer synchronous APIs, but they actually create an internal queue of asynchronous commands. AFAIK testcafe has some internal queue as well.
 - Cypress and testcase come with their own test runners - no Jest love here 😞
 - Cypress creates awesome videos with a nice GUI showing information about your tests out of the box 😍
+  - If you would like to see something similar in Puppetter, maybe vote on the [corresponding feature request](https://github.com/GoogleChrome/puppeteer/issues/478). There is the [`puppeteer-recorder` lib](https://www.npmjs.com/package/puppeteer-recorder) which does something similar, but you have no start/stop API and can only say _"record for x seconds"_ which is hard to know beforehand in this case.
 - `@types/puppeteer` could need some love, but nothing a pull request couldn't fix 👌 
 - Puppeteers waits until functionality is very basic. `waitForFunction` is evaluated in browser context. If you need to await something on the Node side you'll need a helper lib like [`async-wait-until`](https://github.com/devlato/waitUntil).
 - Testcafe seems to automatically await certain assertions and conditions.
@@ -133,6 +134,8 @@ test('check', async (t) => {
 
 ![debugging Testcafe](./assets/testcafe-debugging.png)
 
-## TODOs
+---
 
-- try [`puppeteer-recorder`](https://www.npmjs.com/package/puppeteer-recorder) for recording the test screens
+Thank you for reading this article. ♥
+
+I highly appreciate pull requests for grammar and spelling fixes as I'm not a native speaker. If you find some bug or if you want to make the code simpler, feel free to make a pull request as well. Thank you!
