@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "test": "tsc && testcafe puppeteer dist/*.spec.js",
+        "test": "tsc && testcafe --concurrency 2 puppeteer dist/*.spec.js",
         "test:debug": "tsc && testcafe chrome dist/*.spec.js"
     },
     "devDependencies": {
