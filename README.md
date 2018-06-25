@@ -51,7 +51,7 @@ We try to
 - Cypress runs inside the browser, while every other framework runs a Node process
   - If you need non-browser information (check mails, logs, etc.) in Cypress, you essentially need to start a local Node server which can than be queried for certain informations by your Cypress tests. (E.g. your test can request `localhost:8080/did-i-got-my-email` and the local server will serve you a useful response.)
 - Cypress uses a bundled Eletron version to support testing the same browser in the same version on CI and locally. AFAIK it isn't the only framework where I can't use Puppeteer directly. (Just nice to know - not a real drawback.)
-- Cypress seems to always offer synchronous APIs, I guess because it runs directly in the browser...?
+- Cypress seems to always offer synchronous APIs, but they actually create an internal queue of asynchronous commands. AFAIK testcafe has some internal queue as well.
 - Cypress and testcase come with their own test runners - no Jest love here 😞
 - Cypress creates awesome videos with a nice GUI showing information about your tests out of the box 😍
 - `@types/puppeteer` could need some love, but nothing a pull request couldn't fix 👌 
@@ -79,7 +79,7 @@ Let's start with **Cypress**. It fails with the following overview stating `gith
 
 ![overview of failed test in Cypress](./assets/cypress-failed-test-overview.png)
 
-I actually need to scroll up a while to find my failing test. The stack trace sadly doesn't point to my actual test. Everything is hidden by some Cypress internal logic. I'm not even sure my source maps would work. There error message is okay, but not perfect. It shows me a different selector than I used and it doesn't show me the received content. 😔
+I actually need to scroll up a while to find my failing test. The stack trace sadly doesn't point to my actual test. Everything is hidden by some Cypress internal logic. I'm not even sure my source maps would work. There error message is okay, but not perfect. It shows me a different selector than I used and it doesn't show me the received content. 😔 This happens, because Cypress internally creates a queue of asynchronous command. Earlier versions of `selenium-webdriver` worked in a similar way and I know by experience that debugging this is usually complicated.
 
 ![a failed test in Cypress](./assets/cypress-failed-test-stack-trace.png)
 
@@ -95,7 +95,44 @@ The same is true for **Puppeteer**, because I use Jest here as well.
 
 ![a failed test in Puppeteer](./assets/testcafe-failed-test-stack-trace.png)
 
+## Debugging
+
+All debugging examples were tested by running `$ yarn test:debug` and trying to debug `github.spec.ts` again before the assertion on the signup button.
+
+Let's start with **Cypress** again. Because it stores an internal queue of asynchronous commands, debugging works slighty different, too. You need to place the debugger statement inside a `then()` callback. After the Cypress app opend you click on _"Run all tests"_ for example and the application correctly stop with the opened debugging tools:
+
+```ts
+  it('check', () => {
+    cy.title().should('include', 'leading software development platform');
+    cy.get('.js-signup-form button')
+      .then(() => {
+        debugger;
+      })
+      .contains('Sign up for GitHab');
+  });
+```
+
+![debugging Cypress](./assets/cypress-debugging.png)
+
+Debugging a **Selenium** test could happen in the Node or browser context, depending on your needs. In the Node context you just place a regular `debugger;` statement and debug the test like a normal Node application (see [here for example](https://github.com/Mercateo/how-to-debug-javascript)). I don't know why, but I couldn't force Selenium to automatically open the devtools via `options.addArguments('auto-open-devtools-for-tabs')`. So currently you need to open the dev tools yourself. The debugging statement can be placed via `await driver.executeScript('debugger;');` in your browser context. Note that probably need to specify [a Jest timeout](https://facebook.github.io/jest/docs/en/troubleshooting.html#unresolved-promises) or it will automatically close the test after some time.
+
+**Puppeteer** is quite similar to **Selenium** again, but this time I can easily open the devtools automatically in my `jest-puppeteer.config.js`. A debugger in the browser context is added via `await page.evaluate('debugger;');`. Again you'll probably need to configure the Jest timeout.
+
+**Testcafe** behaves more like Cypress, because of the internal command queue. To debug in the browser context you'll need the `debug()` function to pause Testcafe. After that you are able to open the devtools yourself. The usage looks like this:
+
+```ts
+test('check', async (t) => {
+  await t
+    .expect(Selector('title').innerText)
+    .contains('leading software development platform')
+    .debug() // PAUSE HERE
+    .expect(Selector('.js-signup-form button').innerText)
+    .eql('Sign up for GitHub');
+});
+```
+
+![debugging Testcafe](./assets/testcafe-debugging.png)
+
 ## TODOs
 
-- finish "showcase a debugging example"
 - try [`puppeteer-recorder`](https://www.npmjs.com/package/puppeteer-recorder) for recording the test screens

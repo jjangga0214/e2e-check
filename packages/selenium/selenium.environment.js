@@ -26,6 +26,7 @@ class SeleniumEnvironment extends NodeEnvironment {
     const options = new Options();
     options.setChromeBinaryPath(executablePath());
     if (!process.env.DEBUG) {
+      options.addArguments('auto-open-devtools-for-tabs'); // this doesn't work, why?
       options.headless();
     }
 
